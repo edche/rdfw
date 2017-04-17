@@ -28,7 +28,7 @@ orig_delta = 3; % will get scaled by Frobenius norm
 T = 1000; % Max Iterations
 max_rank = 300; % Estimate on maximum rank to allow for preallocation
 tol = 10^-2;
-num_trials = 5;
+num_trials = 2;
 tra_size = 0.5;
 tst_size = 0.25;
 save_files = 1;
@@ -210,7 +210,7 @@ end
 
 
 if save_files
-    save(sprintf('results/%s-%s.mat', 'demo', method), ...
+    save(sprintf('results/%s-ml%s.mat', 'demo', data_size), ...
             'error_track', 'rank_track', 'rel_opt_gap', 'iter_times', 't_track', ...
             'final_ranks', 'final_ranks_max', 'RMSE_tst', 'RMSE_vld', 'num_trials');
 end
