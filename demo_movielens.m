@@ -35,8 +35,8 @@ save_files = 1;
 display_interval = 25; % Determine how often you want to see updates
 
 %%%% SVD solver options %%%%%%%
-OPTIONS.tol = 1E-5; %       Convergence tolerance                     
-OPTIONS.maxit = 10; %    Maximum number of iterations.                
+OPTIONS.tol = 1E-10; %       Convergence tolerance                     
+OPTIONS.maxit = 50; %    Maximum number of iterations.                
 
 %%%%%% Centre Data %%%%%%%%
 nrm_Y = norm(Y,'fro');

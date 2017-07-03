@@ -65,8 +65,15 @@ end
 
 function [s, t, sig, val] = solve_rd_subproblem(W, S_inv, lambda, kappa)
     M = -0.5*(W + lambda*S_inv);            
-    % Solve it via Inverse Iteration    
-    [s,t] = inverse_iter(M);        
+    s = null(M);
+    t = null(M');
+    if isempty(s) || isempty(t)
+	s = zeros(size(M,1),1);
+	t = zeros(size(M,1),1);
+    else
+	s = s(:,1);
+	t = t(:,1);
+    end
     sig = 1/(kappa*t'*S_inv*s);
     if sig < 0
         sig = -sig;
@@ -74,18 +81,3 @@ function [s, t, sig, val] = solve_rd_subproblem(W, S_inv, lambda, kappa)
     end
     val = sig*s'*W*t;
 end       
-
-function [s,t] = inverse_iter(M)
-    % inverse iteration to compute smallest eigenvalue
-    r = size(M,1);    
-    s = rand(r,1);
-    t = rand(r,1);
-
-    M_inv = inv(M);
-    for i = 1:10
-        t = M_inv*t;
-        s = M_inv'*s;
-        t = t/norm(t);
-        s = s/norm(s);
-    end
-end
