@@ -15,7 +15,7 @@ function [U,S,V, num_active, PX] = update_svd(U, S, V, M, PX, num_active, rows,c
     
     V(:,1:size(V_s,2)) = Q_v*V_s;       
     V(:,size(V_s,2)+1:end) = 0;
-    active_atoms = sum(S(1:num_active) > 1E-6); 
+    active_atoms = sum(S(1:num_active) > S(1)*eps); 
     if active_atoms ~= num_active
         % Truncated the SVD, recalculate PX
         PX = PX - compute_PX(U(:,active_atoms+1:num_active),diag(S(active_atoms+1:num_active))*V(:,active_atoms+1:num_active)',rows,cols);        

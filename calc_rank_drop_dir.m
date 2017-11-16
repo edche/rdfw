@@ -64,16 +64,10 @@ end
 
 
 function [s, t, sig, val] = solve_rd_subproblem(W, S_inv, lambda, kappa)
-    M = -0.5*(W + lambda*S_inv);            
-    s = null(M);
-    t = null(M');
-    if isempty(s) || isempty(t)
-	s = zeros(size(M,1),1);
-	t = zeros(size(M,1),1);
-    else
-	s = s(:,1);
-	t = t(:,1);
-    end
+    M = -0.5*(W + lambda*S_inv); 
+    [U,~,V] = svd(M,'econ');  
+    s = V(:,end);
+    t = U(:,end);        
     sig = 1/(kappa*t'*S_inv*s);
     if sig < 0
         sig = -sig;

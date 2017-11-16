@@ -65,7 +65,7 @@ RANK_DROP_STEP = 0;
 fprintf('Staring Movielens %s\n', data_size);   
 disp('################################')
 
-seed = 2017;
+seed = 1234567;
 randn('state',seed);
 rand('state',seed);
 
