@@ -19,7 +19,7 @@ function [u,v, step_size] = calc_rank_drop_dir(U, S, V, dfx, num_active, delta)
     W = U(:,1:num_active)'*dfx*V(:,1:num_active);
     S_inv = diag(1./S(1:num_active));
 
-    if kappa >= S(num_active)
+    if kappa >= S(num_active)                
         % Interior Case        
         lam_arr = eig(-diag(S(1:num_active))*W);
         best_val = -Inf;
@@ -29,8 +29,9 @@ function [u,v, step_size] = calc_rank_drop_dir(U, S, V, dfx, num_active, delta)
         t = zeros(num_active,1);       
     
         % Case 1 of KKT, norm(t) < 1, s'*t > 0
+        lambda_min = min( lam_arr(imag(lam_arr) == 0) );
         for lam_ind = 1:length(lam_arr)           
-           if isreal(lam_arr(lam_ind))
+           if isreal(lam_arr(lam_ind)) && abs(lam_arr(lam_ind)) <= 2*lambda_min
                lambda = lam_arr(lam_ind); 
                [s_cand, t_cand, sig_cand, val] = solve_rd_subproblem(W, S_inv, lambda, kappa);               
                if val > best_val && sig_cand <= 1
@@ -46,14 +47,14 @@ function [u,v, step_size] = calc_rank_drop_dir(U, S, V, dfx, num_active, delta)
             step_size = alpha/(delta - alpha);            
         else
             % Annulus Case
-            [s,~] = eigs(0.5*(W + W'), S_inv, 1, 'LA');
+            [s, ~] = eigs(0.5*sqrt(diag(S(1:num_active)))*(W + W'), 1, 'LR');
             s = s/norm(s);
             t = s;
             step_size = 1/(delta*s'*S_inv*s - 1);
         end              
     else
         % Annulus Case
-        [s,~] = eigs(0.5*(W + W'), S_inv, 1, 'LA');
+        [s, ~] = eigs(0.5*sqrt(diag(S(1:num_active)))*(W + W'), 1, 'LR');
         s = s/norm(s);
         t = s;
         step_size = 1/(delta*s'*S_inv*s - 1);
